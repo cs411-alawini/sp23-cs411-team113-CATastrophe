@@ -7,15 +7,15 @@
 `git merge origin/main`
 
 2. **backend setup and run** \
-`cd server`
-`npm i` 
-`npm run start`
+`cd server` \
+`npm i` \
+`npm run start` \ 
 
 3. **frontend setup and run** \
 open another terminal in vscode and run: (2 servers need to run at the same time) \
-`cd frontend-vite` 
-`npm i` 
-`npx vite dev`
+`cd frontend-vite` \
+`npm i` \
+`npx vite dev` \
 
 
 4. **coding time!**
