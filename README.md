@@ -26,5 +26,5 @@ cd to the project root directory \
 `git add .` \
 `git commit -m"your commit message"` \
 `git push` // push to your own remote branch \
-`git push origin [your_branch]:main` // push from your branch to main \
+`git push origin [your_branch]:main` // push from your branch to main
 
