@@ -21,8 +21,8 @@ open another terminal in vscode and run: (2 servers need to run at the same time
 4. **coding time!**
 
 
-5. **how to push after code is ready \
-cd to the project root directory** \
+5. **how to push after code is ready** \
+cd to the project root directory \
 `git add .` \
 `git commit -m"your commit message"` \
 `git push` // push to your own remote branch \
