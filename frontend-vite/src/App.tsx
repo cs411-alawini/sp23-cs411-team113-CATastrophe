@@ -8,7 +8,7 @@ function App() {
 
   useEffect(() => {
     if (count > 0) {
-      fetch(`http://localhost:3001/api/data?count=${count}`)
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/data?count=${count}`)
         .then((response) => response.json())
         .then((data) => setServerMessage(data.message))
         .catch((error) => console.error('Error fetching data:', error));
