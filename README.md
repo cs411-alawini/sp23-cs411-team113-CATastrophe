@@ -28,3 +28,19 @@ cd to the project root directory \
 `git push` // push to your own remote branch \
 `git push origin [your_branch]:main` // push from your branch to main
 
+# Developing, Deployment:
+for frontend, look into `package.json`'s "scripts" section, where you can run each command using `npm run [command_name]` (left side is the command's name/label, right side is command). 
+
+run `npm run dev` to have a temporary frontend for **development** that keeps updating when you edit your code. Dev backend route is stored in `.env.development`
+
+run `npm run build` to compile and build the frontend for **production** (deploy). It will produce a `dist` folder on root that can be deployed to a hosting service, but for now we will just run it locally, with an online backend. Production backend route is stored in `.env.development`
+
+use `${import.meta.env.VITE_API_BASE_URL}` to fetch information from API, as defined in .env.development and .env.production, so that the frontend works no matter if the backend is running locally or on GCP. 
+
+# Important dev info:
+
+
+
+
+
+
