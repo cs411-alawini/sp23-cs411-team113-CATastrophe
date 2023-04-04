@@ -1,9 +1,19 @@
 const express = require('express');
-const cors = require('cors'); // Add this line to import the cors package
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 80;
 
-app.use(cors()); // Add this line to enable CORS for all routes
+const bodyParser = require('body-parser');
+
+
+
+const cors = require('cors'); // Add this line to import the cors package
+
+
+app.use(cors()); // Add this line to enable CORS for all routes, mostly for local
+
+app.get('/', (req, res) => {
+  res.json({ message: `Welcome to the root '/'!` });
+});
 
 app.get('/api/data', (req, res) => {
   const count = req.query.count || 0;
