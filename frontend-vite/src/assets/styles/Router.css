@@ -9,7 +9,7 @@ nav {
 }
 
 nav a {
-  color: #fff;
+  color: #ffffffeb;
   text-decoration: none;
   padding: 10px;
   margin-right: 10px;
@@ -18,9 +18,9 @@ nav a {
 }
 
 nav a:hover {
-  background-color: #6f399f;
+  background-color: #ffd069;
 }
 
 nav a.active {
-  background-color: #6f399f;
+  background-color: #7efdff;
 }

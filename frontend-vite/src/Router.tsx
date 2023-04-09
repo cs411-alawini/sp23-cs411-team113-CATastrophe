@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import ChatGPT from './components/chatgpt';
-import App from './App';
+import ChatGPT from './pages/chatgpt';
+import App from './pages/App';
 import NotFound from './pages/NotFound';
 import './assets/styles/Router.css';
 import MyNavbar from './components/Navbar';
+import Login from './pages/Login';
 
 export default function Router() {
   const [activeLink, setActiveLink] = useState('');
@@ -22,11 +23,15 @@ export default function Router() {
         <Link to="/chat" onClick={() => handleLinkClick('/chat')}>
           Chat
         </Link>
+        <Link to="/login" onClick={() => handleLinkClick('/login')}>
+          Login
+        </Link>
       </MyNavbar>
 
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/chat" element={<ChatGPT />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
