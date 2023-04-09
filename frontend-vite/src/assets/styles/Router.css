@@ -1,0 +1,26 @@
+nav {
+  background-color: #5e2b8c;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out;
+}
+
+nav a:hover {
+  background-color: #6f399f;
+}
+
+nav a.active {
+  background-color: #6f399f;
+}
