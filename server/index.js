@@ -98,6 +98,26 @@ app.route('/api/schools/low-crime')
   });
 
 
+  app.route('/api/schools/high-ratemyprof')
+  .get((req, res) => {
+    const SQL_query = `
+      SELECT sc.Name, AVG(rp.StarRating) as avg_rating 
+      FROM School sc JOIN RateProf rp ON (sc.Name = rp.SchoolName) 
+      GROUP BY rp.SchoolName 
+      ORDER BY avg_rating DESC
+      LIMIT 100;
+    `;
+    dbConnection.query(SQL_query, (error, results) => {
+      // console.log(results);
+      if (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching data from the database.' });
+      } else {
+        res.json(results);
+      }
+    });
+  });
+
 
   // must be different with individual get. 
 app.route('/api/schools')

@@ -65,6 +65,21 @@ function BasicSQL() {
         setLoadingSchools(false);
       });
   };
+
+
+  const fetchHighRateMyProf = () => {
+    setLoadingSchools(true);
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/schools/high-ratemyprof`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSchools(data);
+        setLoadingSchools(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching low crime schools data:', error);
+        setLoadingSchools(false);
+      });
+  };
   
 
   const handleOperationClick = (operation: string) => {
@@ -201,6 +216,8 @@ function BasicSQL() {
       });
   } else if (operation === 'lowCrime') {
     fetchLowCrimeSchools();
+  } else if (operation === 'highRateMyProf') {
+    fetchHighRateMyProf();
   }
   
 };
@@ -219,7 +236,7 @@ const renderTable = () => (
     <Table>
       <TableHead>
         <TableRow>
-          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation == 'lowCrime') && (
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation == 'lowCrime' || operation == 'highRateMyProf') && (
             <TableCell>School Name</TableCell>
           )}
           {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation == 'lowCrime') && (
@@ -258,6 +275,9 @@ const renderTable = () => (
           {operation === 'lowCrime' && (
             <TableCell align="right">Crime Rate</TableCell>
           )}
+          {operation === 'highRateMyProf' && (
+            <TableCell align="right">AVG RateMyProf</TableCell>
+          )}
 
         </TableRow>
       </TableHead>
@@ -267,7 +287,9 @@ const renderTable = () => (
             <TableCell component="th" scope="row">
               {school.Name}
             </TableCell>
-            <TableCell align="right">{school.State}</TableCell>
+            {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation === 'lowCrime') && (
+              <TableCell align="right">{school.State}</TableCell>
+            )}
             {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
               <>
                 <TableCell align="right">{school.TotalEnrollment}</TableCell>
@@ -284,6 +306,9 @@ const renderTable = () => (
             )}
             {operation === 'lowCrime' && (
               <TableCell align="right">{school.CrimeRate}</TableCell>
+            )}
+            {operation === 'highRateMyProf' && (
+              <TableCell align="right">{school.avg_rating}</TableCell>
             )}
           </TableRow>
         ))}
@@ -325,7 +350,9 @@ return (
     <Button variant="primary" onClick={() => handleOperationClick('lowCrime')}>
       Get Low Crime Schools
     </Button>
-
+    <Button variant="primary" onClick={() => handleOperationClick('highRateMyProf')}>
+      Get High RateMyProf Schools
+    </Button>
 
 
     {operation && (
