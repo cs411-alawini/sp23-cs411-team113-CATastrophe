@@ -4,6 +4,7 @@
   padding: 20px;
   max-width: 80%;
   margin: 50px auto 0;
+  background-color: #f2ecff; /* light purple background */
 }
 
 .chatgptTitle {
@@ -16,7 +17,17 @@
 
 .chatgptMessage {
   margin: 10px 0;
+  font-size: 1.5em; /* slightly bigger text */
+  position: relative;
 }
+
+.chatgptMessage:not(:first-child) {
+  border-top: 1px solid #b78bffd3; /* stylized line with light purple */
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+
 
 .chatgptInputContainer {
   display: flex;
@@ -26,6 +37,7 @@
 .chatgptInput {
   flex: 1;
   padding: 10px;
+  font-size: 1.1em; /* slightly bigger text */
   border-radius: 5px;
   border: 1px solid #ccc;
   margin-right: 10px;

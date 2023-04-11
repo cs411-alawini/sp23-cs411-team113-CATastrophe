@@ -17,7 +17,17 @@ function BasicSQL() {
     name: '',
     state: '',
     enrollment: '',
+    stateSalaryRank: '',
+    earlyCareerPay: '',
+    midCareerPay: '',
+    stemPercent: '',
+    type: '',
+    degreeLength: '',
+    boardCost: '',
+    inStateTuition: '',
+    outStateTuition: '',
   });
+  
 
   useEffect(() => {
     if (count > 0) {
@@ -42,6 +52,21 @@ function BasicSQL() {
       });
   };
 
+  const fetchLowCrimeSchools = () => {
+    setLoadingSchools(true);
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/schools/low-crime`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSchools(data);
+        setLoadingSchools(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching low crime schools data:', error);
+        setLoadingSchools(false);
+      });
+  };
+  
+
   const handleOperationClick = (operation: string) => {
     setOperation(operation);
   };
@@ -51,6 +76,12 @@ function BasicSQL() {
       ...inputValues,
       [field]: event.target.value,
     });
+  };
+  
+
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    handleOperationSubmit();
   };
 
   const handleOperationSubmit = () => {
@@ -79,11 +110,34 @@ function BasicSQL() {
           Name: inputValues.name,
           State: inputValues.state,
           TotalEnrollment: parseInt(inputValues.enrollment),
+          StateSalaryRank: parseInt(inputValues.stateSalaryRank),
+          EarlyCareerPay: parseFloat(inputValues.earlyCareerPay),
+          MidCareerPay: parseFloat(inputValues.midCareerPay),
+          STEMPercent: parseInt(inputValues.stemPercent),
+          Type: inputValues.type,
+          DegreeLength: inputValues.degreeLength,
+          BoardCost: parseFloat(inputValues.boardCost),
+          InStateTuition: parseFloat(inputValues.inStateTuition),
+          OutStateTuition: parseFloat(inputValues.outStateTuition),
         }),
       })
         .then((response) => response.json())
         .then(() => {
           fetchSchools();
+          setInputValues({
+            name: '',
+            state: '',
+            enrollment: '',
+            stateSalaryRank: '',
+            earlyCareerPay: '',
+            midCareerPay: '',
+            stemPercent: '',
+            type: '',
+            degreeLength: '',
+            boardCost: '',
+            inStateTuition: '',
+            outStateTuition: '',
+          });
         })
         .catch((error) => {
           console.error('Error creating school:', error);
@@ -99,11 +153,34 @@ function BasicSQL() {
         body: JSON.stringify({
           State: inputValues.state,
           TotalEnrollment: parseInt(inputValues.enrollment),
+          StateSalaryRank: parseInt(inputValues.stateSalaryRank),
+          EarlyCareerPay: parseFloat(inputValues.earlyCareerPay),
+          MidCareerPay: parseFloat(inputValues.midCareerPay),
+          STEMPercent: parseInt(inputValues.stemPercent),
+          Type: inputValues.type,
+          DegreeLength: inputValues.degreeLength,
+          BoardCost: parseFloat(inputValues.boardCost),
+          InStateTuition: parseFloat(inputValues.inStateTuition),
+          OutStateTuition: parseFloat(inputValues.outStateTuition),
         }),
       })
       .then((response) => response.json())
       .then(() => {
         fetchSchools();
+        setInputValues({
+          name: '',
+          state: '',
+          enrollment: '',
+          stateSalaryRank: '',
+          earlyCareerPay: '',
+          midCareerPay: '',
+          stemPercent: '',
+          type: '',
+          degreeLength: '',
+          boardCost: '',
+          inStateTuition: '',
+          outStateTuition: '',
+        });
       })
       .catch((error) => {
         console.error('Error updating school:', error);
@@ -122,7 +199,10 @@ function BasicSQL() {
         console.error('Error deleting school:', error);
         setLoadingSchools(false);
       });
+  } else if (operation === 'lowCrime') {
+    fetchLowCrimeSchools();
   }
+  
 };
 
 const renderSkeleton = () => {
@@ -139,18 +219,46 @@ const renderTable = () => (
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell>Name</TableCell>
-          <TableCell align="right">Total Enrollment</TableCell>
-          <TableCell align="right">State</TableCell>
-          <TableCell align="right">State Salary Rank</TableCell>
-          <TableCell align="right">Early Career Pay</TableCell>
-          <TableCell align="right">Mid Career Pay</TableCell>
-          <TableCell align="right">STEM Percent</TableCell>
-          <TableCell align="right">Type</TableCell>
-          <TableCell align="right">Degree Length</TableCell>
-          <TableCell align="right">Board Cost</TableCell>
-          <TableCell align="right">In-State Tuition</TableCell>
-          <TableCell align="right">Out-State Tuition</TableCell>
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation == 'lowCrime') && (
+            <TableCell>School Name</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation == 'lowCrime') && (
+            <TableCell align="right">State</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">Total Enrollment</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">State Salary Rank</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">Early Career Pay</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">Mid Career Pay</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">STEM Percent</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">Type</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">Degree Length</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">Board Cost</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">In-State Tuition</TableCell>
+          )}
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+            <TableCell align="right">Out-State Tuition</TableCell>
+          )}
+          {operation === 'lowCrime' && (
+            <TableCell align="right">Crime Rate</TableCell>
+          )}
+
         </TableRow>
       </TableHead>
       <TableBody>
@@ -159,17 +267,24 @@ const renderTable = () => (
             <TableCell component="th" scope="row">
               {school.Name}
             </TableCell>
-            <TableCell align="right">{school.TotalEnrollment}</TableCell>
             <TableCell align="right">{school.State}</TableCell>
-            <TableCell align="right">{school.StateSalaryRank}</TableCell>
-            <TableCell align="right">{school.EarlyCareerPay}</TableCell>
-            <TableCell align="right">{school.MidCareerPay}</TableCell>
-            <TableCell align="right">{school.STEMPercent}</TableCell>
-            <TableCell align="right">{school.Type}</TableCell>
-            <TableCell align="right">{school.DegreeLength}</TableCell>
-            <TableCell align="right">{school.BoardCost}</TableCell>
-            <TableCell align="right">{school.InStateTuition}</TableCell>
-            <TableCell align="right">{school.OutStateTuition}</TableCell>
+            {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
+              <>
+                <TableCell align="right">{school.TotalEnrollment}</TableCell>
+                <TableCell align="right">{school.StateSalaryRank}</TableCell>
+                <TableCell align="right">{school.EarlyCareerPay}</TableCell>
+                <TableCell align="right">{school.MidCareerPay}</TableCell>
+                <TableCell align="right">{school.STEMPercent}</TableCell>
+                <TableCell align="right">{school.Type}</TableCell>
+                <TableCell align="right">{school.DegreeLength}</TableCell>
+                <TableCell align="right">{school.BoardCost}</TableCell>
+                <TableCell align="right">{school.InStateTuition}</TableCell>
+                <TableCell align="right">{school.OutStateTuition}</TableCell>
+              </>
+            )}
+            {operation === 'lowCrime' && (
+              <TableCell align="right">{school.CrimeRate}</TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>
@@ -182,12 +297,16 @@ const renderTable = () => (
 return (
   <div>
     <h1 className={styles.heading}>College Recommendation</h1>
+    
+    
     <Button variant="secondary" onClick={() => setCount(count + 1)}>
       count is {count}
     </Button>
     <p>
       <b>This message is from server: {serverMessage}</b>
     </p>
+
+
     <Button variant="primary" onClick={() => handleOperationClick('getAll')}>
       Get All Schools
     </Button>
@@ -203,42 +322,91 @@ return (
     <Button variant="primary" onClick={() => handleOperationClick('delete')}>
       Delete School
     </Button>
+    <Button variant="primary" onClick={() => handleOperationClick('lowCrime')}>
+      Get Low Crime Schools
+    </Button>
+
+
+
     {operation && (
       <div className="mt-3">
-        <InputGroup className="mb-3">
-          <FormControl
-            placeholder="School Name"
-            onChange={(event) => handleInputChange(event, 'name')}
-          />
-          {operation !== 'get' && operation !== 'delete' && (
-            <>
+        <form onSubmit={handleSubmit}>
+          <InputGroup className="mb-3">
+            {(operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
               <FormControl
-                placeholder="State"
-                onChange={(event) => handleInputChange(event, 'state')}
+                placeholder="School Name"
+                onChange={(event) => handleInputChange(event, 'name')}
               />
-              <FormControl
-                placeholder="Total Enrollment"
-                onChange={(event) => handleInputChange(event, 'enrollment')}
-              />
-            </>
-          )}
-          <Button variant="outline-secondary" id="button-addon2" onClick={handleOperationSubmit}>
-            Submit
-          </Button>
-        </InputGroup>
+            )}
+
+            
+            {(operation === 'post' || operation === 'put') && (
+              <>
+                <FormControl
+                  placeholder="State"
+                  onChange={(event) => handleInputChange(event, 'state')}
+                />
+                <FormControl
+                  placeholder="Total Enrollment"
+                  onChange={(event) => handleInputChange(event, 'enrollment')}
+                />
+                <FormControl
+                  placeholder="State Salary Rank"
+                  onChange={(event) => handleInputChange(event, 'stateSalaryRank')}
+                />
+                <FormControl
+                  placeholder="Early Career Pay"
+                  onChange={(event) => handleInputChange(event, 'earlyCareerPay')}
+                />
+                <FormControl
+                  placeholder="Mid Career Pay"
+                  onChange={(event) => handleInputChange(event, 'midCareerPay')}
+                />
+                <FormControl
+                  placeholder="STEM Percent"
+                  onChange={(event) => handleInputChange(event, 'stemPercent')}
+                />
+                <FormControl
+                  placeholder="Type"
+                  onChange={(event) => handleInputChange(event, 'type')}
+                />
+                <FormControl
+                  placeholder="Degree Length"
+                  onChange={(event) => handleInputChange(event, 'degreeLength')}
+                />
+                <FormControl
+                  placeholder="Board Cost"
+                  onChange={(event) => handleInputChange(event, 'boardCost')}
+                />
+                <FormControl
+                  placeholder="In-State Tuition"
+                  onChange={(event) => handleInputChange(event, 'inStateTuition')}
+                />
+                <FormControl
+                  placeholder="Out-State Tuition"
+                  onChange={(event) => handleInputChange(event, 'outStateTuition')}
+                />
+              </>
+            )}
+
+            
+            
+            <Button variant="warning" id="button-addon2" onClick={handleOperationSubmit}>
+              Submit
+            </Button>
+          </InputGroup>
+        </form>
       </div>
     )}
-    <ul>
-      {loadingSchools
-        ? Array.from({ length: 10 }).map((_, index) => (
-            <React.Fragment key={index}>{renderSkeleton()}</React.Fragment>
-          ))
-        : schools.map((school: any, index: number) => (
-            <li key={index}>
-              {school.Name} - {school.State} (Enrollment: {school.TotalEnrollment})
-            </li>
-          ))}
-    </ul>
+    {loadingSchools ? (
+      <ul>
+        {Array.from({ length: 10 }).map((_, index) => (
+          <React.Fragment key={index}>{renderSkeleton()}</React.Fragment>
+        ))}
+      </ul>
+    ) : (
+      renderTable()
+    )}
   </div>
 );
 }

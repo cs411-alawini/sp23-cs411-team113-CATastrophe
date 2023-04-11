@@ -47,7 +47,7 @@ app.route('/api/data')
 app.route('/api/chat')
   .post(async (req, res) => {
     try {
-      const userMessage = req.body.message;
+      const messages = req.body.messages;
       const OPENAI_API_KEY = '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'; // Replace with your OpenAI API key
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -58,7 +58,7 @@ app.route('/api/chat')
         },
         body: JSON.stringify({
           model: 'gpt-3.5-turbo',
-          messages: [{ role: 'user', content: userMessage }],
+          messages: messages,
         }),
       });
 
@@ -73,13 +73,39 @@ app.route('/api/chat')
   });
 
 
+app.route('/api/schools/low-crime')
+  .get((req, res) => {
+    const SQL_query = `
+      SELECT sc.Name, sc.State, st.CrimeRate 
+      FROM School sc
+      JOIN State st ON (sc.State=st.Code) 
+      WHERE st.CrimeRate < (
+        SELECT AVG(CrimeRate) 
+        FROM State
+      ) 
+      ORDER BY st.CrimeRate
+      LIMIT 100;
+    `;
+    dbConnection.query(SQL_query, (error, results) => {
+      // console.log(results);
+      if (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching data from the database.' });
+      } else {
+        res.json(results);
+      }
+    });
+  });
+
+
+
   // must be different with individual get. 
 app.route('/api/schools')
   // Get all schools
   .get((req, res) => {
     const SQL_query = 'SELECT * FROM School LIMIT 30';
     dbConnection.query(SQL_query, (error, results) => {
-      console.log(results);
+      // console.log(results);
       if (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching data from the database.' });
@@ -106,7 +132,7 @@ app.route('/api/schools')
   // Get a specific school by Name
   .get((req, res) => {
     const school_name = req.params.name;
-    console.log(school_name);
+    // console.log(school_name);
 
     if (typeof school_name !== 'string') {
       res.status(400).json({ message: 'Invalid input. Name should be a string.' });
@@ -114,9 +140,9 @@ app.route('/api/schools')
     }
 
     const SQL_query = "SELECT * FROM School WHERE Name LIKE CONCAT('%', ?, '%')";
-    console.log(SQL_query);
+    // console.log(SQL_query);
     dbConnection.query(SQL_query, [school_name], (error, results) => {
-      console.log(results);
+      // console.log(results);
       if (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching data from the database.' });
@@ -161,15 +187,6 @@ app.route('/api/schools')
       }
     });
   });
-
-
-  
-
-
-
-///////////[ --------- ]///////////
-
-
 
 
 // Start the server

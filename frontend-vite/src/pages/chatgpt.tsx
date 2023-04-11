@@ -8,13 +8,21 @@ function ChatGPT() {
   const sendMessage = async () => {
     if (inputMessage.trim() === '') return;
     setMessages([...messages, `User: ${inputMessage}`]);
-
+  
     try {
+      const formattedMessages = messages.map((message, index) => {
+        const role = message.startsWith('User:') ? 'user' : 'assistant';
+        const content = message.slice(role === 'user' ? 6 : 5);
+        return { role, content };
+      });
+  
+      formattedMessages.push({ role: 'user', content: inputMessage });
+  
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: inputMessage,
+          messages: formattedMessages,
         }),
       });
 
