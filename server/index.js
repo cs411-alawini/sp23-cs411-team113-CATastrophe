@@ -11,7 +11,7 @@ require('dotenv').config();
 const cors = require('cors'); // Add this line to import the cors package
 
 const corsOptions = {
-  origin: 'http://localhost:3002', // Allow requests from your frontend origin
+  origin: '*', // Allow requests from your frontend origin
   methods: 'GET,POST,PUT,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
 };
