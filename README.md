@@ -9,7 +9,7 @@
 2. **backend setup and run** \
 `cd server` \
 `npm i` \
-`npm run start` 
+`npm run start` or `nodemon run start`
 
 3. **frontend setup and run** \
 open another terminal in vscode and run: (2 servers need to run at the same time) \
@@ -27,6 +27,10 @@ cd to the project root directory \
 `git commit -m"your commit message"` \
 `git push` // push to your own remote branch \
 `git push origin [your_branch]:main` // push from your branch to main
+
+# Cloud resource management:
+make sure the SQL database "college-rec" is running. \
+
 
 # Developing, Deployment:
 for **frontend**, look into `package.json`'s "scripts" section, where you can run each command using `npm run [command_name]` (left side is the command's name/label, right side is command). 

@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3030;
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); /// omg this is the problem
