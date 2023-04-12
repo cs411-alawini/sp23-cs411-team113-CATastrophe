@@ -30,7 +30,9 @@ cd to the project root directory \
 
 # Cloud resource management:
 make sure the SQL database "college-rec" is running. \
-
+default frontend http endpoint (gcp enabled): 80 \
+default backend endpoint (gcp enabled): 3030 \
+found both in 
 
 # Developing, Deployment:
 for **frontend**, look into `package.json`'s "scripts" section, where you can run each command using `npm run [command_name]` (left side is the command's name/label, right side is command). 

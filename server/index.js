@@ -83,7 +83,7 @@ app.route('/api/schools/low-crime')
         SELECT AVG(CrimeRate) 
         FROM State
       ) 
-      ORDER BY st.CrimeRate
+      ORDER BY st.CrimeRate, sc.Name ASC
       LIMIT 100;
     `;
     dbConnection.query(SQL_query, (error, results) => {
@@ -104,7 +104,7 @@ app.route('/api/schools/low-crime')
       SELECT sc.Name, AVG(rp.StarRating) as avg_rating 
       FROM School sc JOIN RateProf rp ON (sc.Name = rp.SchoolName) 
       GROUP BY rp.SchoolName 
-      ORDER BY avg_rating DESC
+      ORDER BY avg_rating DESC, sc.Name ASC
       LIMIT 100;
     `;
     dbConnection.query(SQL_query, (error, results) => {
