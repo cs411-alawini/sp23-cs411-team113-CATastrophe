@@ -8,8 +8,11 @@ import { Box } from '@mui/system';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 function BasicSQL() {
-  const [count, setCount] = useState(0);
-  const [serverMessage, setServerMessage] = useState('Hello world 0');
+  const [count, setCount] = useState(() => {
+    const storedCount = localStorage.getItem('count');
+    return storedCount ? parseInt(storedCount) : 0;
+  });
+  const [serverMessage, setServerMessage] = useState('');
   const [schools, setSchools] = useState([]);
   const [loadingSchools, setLoadingSchools] = useState(false);
   const [operation, setOperation] = useState('');
@@ -28,9 +31,13 @@ function BasicSQL() {
     outStateTuition: '',
   });
   
-
+  // effect for the counter that persists in browser. 
   useEffect(() => {
     if (count > 0) {
+      // Update the count in localStorage
+      localStorage.setItem('count', count.toString());
+      // console.log(localStorage.getItem('count'));
+
       fetch(`${import.meta.env.VITE_API_BASE_URL}/api/data?count=${count}`)
         .then((response) => response.json())
         .then((data) => setServerMessage(data.message))
@@ -324,36 +331,39 @@ return (
     <h1 className={styles.heading}>College Recommendation</h1>
     
     
-    <Button variant="secondary" onClick={() => setCount(count + 1)}>
-      count is {count}
-    </Button>
-    <p>
-      <b>This message is from server: {serverMessage}</b>
-    </p>
+    <div className={styles.counterContainer}>
+        <Button variant="secondary" onClick={() => setCount(count + 1)}>
+          count is {count}
+        </Button>
 
+        <p className={styles.textButton}>
+          <b>Server Message: {serverMessage}</b>
+        </p>
+    </div>
 
-    <Button variant="primary" onClick={() => handleOperationClick('getAll')}>
-      Get All Schools
-    </Button>
-    <Button variant="primary" onClick={() => handleOperationClick('get')}>
-      Get School By Name
-    </Button>
-    <Button variant="primary" onClick={() => handleOperationClick('post')}>
-      Create School
-    </Button>
-    <Button variant="primary" onClick={() => handleOperationClick('put')}>
-      Update School
-    </Button>
-    <Button variant="primary" onClick={() => handleOperationClick('delete')}>
-      Delete School
-    </Button>
-    <Button variant="primary" onClick={() => handleOperationClick('lowCrime')}>
-      Get Low Crime Schools
-    </Button>
-    <Button variant="primary" onClick={() => handleOperationClick('highRateMyProf')}>
-      Get High RateMyProf Schools
-    </Button>
-
+    <div className={styles.buttonContainer}>
+      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('getAll')}>
+        Get All Schools
+      </Button>
+      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('get')}>
+        Get School By Name
+      </Button>
+      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('post')}>
+        Create School
+      </Button>
+      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('put')}>
+        Update School
+      </Button>
+      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('delete')}>
+        Delete School
+      </Button>
+      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('lowCrime')}>
+        Get Low Crime Schools
+      </Button>
+      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('highRateMyProf')}>
+        Get High RateMyProf Schools
+      </Button>
+    </div>
 
     {operation && (
       <div className="mt-3">

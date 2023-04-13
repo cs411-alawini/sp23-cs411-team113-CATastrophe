@@ -10,3 +10,34 @@
   font-family: 'Arial', sans-serif; /* Change 'Arial' to your preferred font */
   font-size: 16px; /* Change '16px' to your desired font size */
 }
+
+
+
+.counterContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.textButton {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  margin-left: 5px;
+  border: 1px solid #d3bce6; /* Light purple border */
+  border-radius: 5px;
+  background-color: white;
+}
+
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.buttonMargin {
+  margin-left: 3px;
+  margin-right: 3px;
+}

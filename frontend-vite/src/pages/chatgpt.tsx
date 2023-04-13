@@ -1,9 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../assets/styles/chatgpt.module.css';
 
 function ChatGPT() {
-  const [messages, setMessages] = useState<string[]>([]);
+  // Retrieve chat history from localStorage or set it to an empty array if it doesn't exist
+  const [messages, setMessages] = useState<string[]>(() => {
+    const storedMessages = localStorage.getItem('chatHistory');
+    return storedMessages ? JSON.parse(storedMessages) : [];
+  });
+
   const [inputMessage, setInputMessage] = useState('');
+
+  const clearMessages = () => {
+    setMessages([]);
+  };
+
+  
+  useEffect(() => {
+    localStorage.setItem('chatHistory', JSON.stringify(messages));
+  }, [messages]);
 
   const sendMessage = async () => {
     if (inputMessage.trim() === '') return;
@@ -41,37 +55,48 @@ function ChatGPT() {
     setInputMessage('');
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault(); // Prevent a newline from being added
       sendMessage();
     }
   };
 
   return (
-    <div className={styles.chatgptContainer}>
-      <h2 className={styles.chatgptTitle}>ChatGPT</h2>
-      <div className={styles.chatgptMessages}>
-        {messages.map((message, index) => (
-          <p key={index} className={styles.chatgptMessage}>
-            {message}
-          </p>
-        ))}
+    <>
+      <div className={styles.chatgptContainer}>
+        <h2 className={styles.chatgptTitle}>ChatGPT</h2>
+        <div className={styles.chatgptMessages}>
+          {messages.map((message, index) => (
+            <div key={index} className={styles.chatgptMessage}>
+              <span className={styles.chatgptLabel}>{message.startsWith('User:') ? 'User:' : 'GPT:'}</span>
+              <span className={styles.chatgptContent}>{message.slice(message.startsWith('User:') ? 6 : 5)}</span>
+            </div>
+          ))}
+        </div>
       </div>
       <div className={styles.chatgptInputContainer}>
-        <input
+        <textarea
           className={styles.chatgptInput}
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Type your message and hit Enter to send"
+          rows={3}
         />
-        <button className={styles.chatgptSendButton} onClick={sendMessage}>
-          Send
-        </button>
+
+        <div className={styles.chatgptButtons}>
+          <button className={styles.chatgptClearButton} onClick={clearMessages}>
+            Clear
+          </button>
+          <button className={styles.chatgptSendButton} onClick={sendMessage}>
+            Send
+          </button>
+        </div>
       </div>
-    </div>
-    
+    </>
   );
+  
 }
 
 export default ChatGPT;

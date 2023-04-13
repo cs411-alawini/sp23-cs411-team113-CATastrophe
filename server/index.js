@@ -40,7 +40,7 @@ app.route('/')
 app.route('/api/data')
   .get((req, res) => {
     const count = req.query.count || 0;
-    res.json({ message: `Hello world ${count}` });
+    res.json({ message: `${count}` });
   });
 
 // ChatGPT route

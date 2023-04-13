@@ -3,9 +3,11 @@ import reactLogo from '../assets/images/react-logo.svg';
 import nodeLogo from '../assets/images/node-logo.png';
 import mySQLLogo from '../assets/images/mysql-logo.png';
 
+import styles from '../assets/styles/Logos.module.css';
+
 function Logos() {
   return (
-    <div>
+    <div className={styles.logosContainer}>
       <a href="https://illinois.edu/" target="_blank">
         <img src={UIUClogo} className="logo" alt="Illinois logo" style={{height: '100px' }}/>
       </a>
