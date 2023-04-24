@@ -8,6 +8,8 @@ import { Box } from '@mui/system';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 function BasicSQL() {
+
+  // //////////[ School, State related stats ]//////////
   const [count, setCount] = useState(() => {
     const storedCount = localStorage.getItem('count');
     return storedCount ? parseInt(storedCount) : 0;
@@ -17,6 +19,7 @@ function BasicSQL() {
   const [loadingSchools, setLoadingSchools] = useState(false);
   const [operation, setOperation] = useState('');
   const [inputValues, setInputValues] = useState({
+    // schools
     name: '',
     state: '',
     enrollment: '',
@@ -29,7 +32,14 @@ function BasicSQL() {
     boardCost: '',
     inStateTuition: '',
     outStateTuition: '',
+    // states
+    stateCode: '',
+    stateCrimeRate: '',
+
+
   });
+
+
   
   // effect for the counter that persists in browser. 
   useEffect(() => {
@@ -87,6 +97,34 @@ function BasicSQL() {
         setLoadingSchools(false);
       });
   };
+
+  const fetchLowCrimeHighProf = () => {
+    setLoadingSchools(true);
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/schools/lowCrimeHighProf`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSchools(data);
+        setLoadingSchools(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching low crime schools data:', error);
+        setLoadingSchools(false);
+      });
+  };
+
+  const fetchAllStates = () => {
+    setLoadingSchools(true);
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/states`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSchools(data);
+        setLoadingSchools(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching schools data:', error);
+        setLoadingSchools(false);
+      });
+  };
   
 
   const handleOperationClick = (operation: string) => {
@@ -94,6 +132,7 @@ function BasicSQL() {
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    console.log(event.target.value);
     setInputValues({
       ...inputValues,
       [field]: event.target.value,
@@ -141,6 +180,7 @@ function BasicSQL() {
           BoardCost: parseFloat(inputValues.boardCost),
           InStateTuition: parseFloat(inputValues.inStateTuition),
           OutStateTuition: parseFloat(inputValues.outStateTuition),
+      
         }),
       })
         .then((response) => response.json())
@@ -159,6 +199,8 @@ function BasicSQL() {
             boardCost: '',
             inStateTuition: '',
             outStateTuition: '',
+            stateCode: '',
+            stateCrimeRate: '',
           });
         })
         .catch((error) => {
@@ -202,6 +244,8 @@ function BasicSQL() {
           boardCost: '',
           inStateTuition: '',
           outStateTuition: '',
+          stateCode: '',
+          stateCrimeRate: '',
         });
       })
       .catch((error) => {
@@ -225,9 +269,58 @@ function BasicSQL() {
     fetchLowCrimeSchools();
   } else if (operation === 'highRateMyProf') {
     fetchHighRateMyProf();
+  } else if (operation === 'lowCrimeHighProf') {
+    fetchLowCrimeHighProf();
+  } else if (operation === 'getAllStates') {
+    fetchAllStates();
+  } else if (operation === 'updateState') {
+
+    console.log('update state called');
+    console.log('inputValues.stateCode:', inputValues.stateCode, ";");
+    console.log('inputValues.stateCrimeRate:', inputValues.stateCrimeRate, ";");
+
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/states/${inputValues.stateCode}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // StateName: inputValues.stateCode,
+        CrimeRate: parseFloat(inputValues.stateCrimeRate),
+      }),
+    })
+    .then(
+      (response) => response.json())
+    .then(() => {
+
+      setInputValues({
+        name: '',
+        state: '',
+        enrollment: '',
+        stateSalaryRank: '',
+        earlyCareerPay: '',
+        midCareerPay: '',
+        stemPercent: '',
+        type: '',
+        degreeLength: '',
+        boardCost: '',
+        inStateTuition: '',
+        outStateTuition: '',
+        stateCode: '',
+        stateCrimeRate: '',
+      });
+    })
+    .then(() => fetchAllStates())
+    .catch((error) => {
+      console.error('Error updating school:', error);
+      setLoadingSchools(false);
+    });
+    
   }
   
 };
+
+
 
 const renderSkeleton = () => {
   return (
@@ -243,10 +336,10 @@ const renderTable = () => (
     <Table>
       <TableHead>
         <TableRow>
-          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation == 'lowCrime' || operation == 'highRateMyProf') && (
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation === 'lowCrime' || operation == 'highRateMyProf' || operation == 'lowCrimeHighProf') && (
             <TableCell>School Name</TableCell>
           )}
-          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation == 'lowCrime') && (
+          {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation === 'lowCrime') && (
             <TableCell align="right">State</TableCell>
           )}
           {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
@@ -279,21 +372,39 @@ const renderTable = () => (
           {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
             <TableCell align="right">Out-State Tuition</TableCell>
           )}
-          {operation === 'lowCrime' && (
+          {(operation === 'lowCrime') && (
             <TableCell align="right">Crime Rate</TableCell>
           )}
           {operation === 'highRateMyProf' && (
             <TableCell align="right">AVG RateMyProf</TableCell>
           )}
+          {operation === 'lowCrimeHighProf' && (
+            <TableCell align="right">Low Crime, High Prof Score</TableCell>
+          )}
+
+          {/* States */}
+          {(operation === 'getAllStates' || operation === 'updateState') && (
+            <TableCell align="right">State</TableCell>
+          )}
+          {(operation === 'getAllStates' || operation === 'updateState') && (
+            <TableCell align="right">Crime Rate</TableCell>
+          )}
+          {(operation === 'getAllStates' || operation === 'updateState') && (
+            <TableCell align="right">Happiness Score</TableCell>
+          )}
+     
+
+
+
 
         </TableRow>
       </TableHead>
       <TableBody>
         {schools.map((school: any, index: number) => (
           <TableRow key={index}>
-            <TableCell component="th" scope="row">
-              {school.Name}
-            </TableCell>
+            {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation === 'lowCrime' || operation === 'highRateMyProf' || operation === 'lowCrimeHighProf') && (
+              <TableCell component="th" scope="row">{school.Name}</TableCell>
+            )}
             {(operation === 'getAll' || operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete' || operation === 'lowCrime') && (
               <TableCell align="right">{school.State}</TableCell>
             )}
@@ -311,11 +422,25 @@ const renderTable = () => (
                 <TableCell align="right">{school.OutStateTuition}</TableCell>
               </>
             )}
-            {operation === 'lowCrime' && (
+            {(operation === 'lowCrime') && (
               <TableCell align="right">{school.CrimeRate}</TableCell>
             )}
             {operation === 'highRateMyProf' && (
               <TableCell align="right">{school.avg_rating}</TableCell>
+            )}
+            {operation === 'lowCrimeHighProf' && (
+              <TableCell align="right">{school.Score}</TableCell>
+            )}
+
+            {/* States */}
+            {(operation === 'getAllStates' || operation === 'updateState') && (
+              <TableCell align="right">{school.StateName}</TableCell>
+            )}
+            {(operation === 'getAllStates' || operation === 'updateState') && (
+              <TableCell align="right">{school.CrimeRate}</TableCell>
+            )}
+            {(operation === 'getAllStates' || operation === 'updateState') && (
+              <TableCell align="right">{school.HappinessScore}</TableCell>
             )}
           </TableRow>
         ))}
@@ -342,6 +467,7 @@ return (
     </div>
 
     <div className={styles.buttonContainer}>
+      {/* School Buttons */}
       <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('getAll')}>
         Get All Schools
       </Button>
@@ -357,18 +483,45 @@ return (
       <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('delete')}>
         Delete School
       </Button>
-      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('lowCrime')}>
+      <Button variant="info" className={styles.buttonMargin} onClick={() => handleOperationClick('lowCrime')}>
         Get Low Crime Schools
       </Button>
-      <Button variant="primary" className={styles.buttonMargin} onClick={() => handleOperationClick('highRateMyProf')}>
+      <Button variant="info" className={styles.buttonMargin} onClick={() => handleOperationClick('highRateMyProf')}>
         Get High RateMyProf Schools
       </Button>
+      <Button variant="info" className={styles.buttonMargin} onClick={() => handleOperationClick('lowCrimeHighProf')}>
+        Get Low Crime and High Prof Rating Schools
+      </Button>  
+      
+      {/* States Buttons */}
+      <Button variant="success" className={styles.buttonMargin} onClick={() => handleOperationClick('getAllStates')}>
+        Get All States
+      </Button>  
+      <Button variant="success" className={styles.buttonMargin} onClick={() => handleOperationClick('updateState')}>
+        Update State
+      </Button>  
     </div>
 
+    {/* //////////////////////////////[ form inputs ]/////////////////////////////// */}
     {operation && (
       <div className="mt-3">
         <form onSubmit={handleSubmit}>
           <InputGroup className="mb-3">
+            {(operation === 'updateState') && (
+              <>
+                <FormControl
+                  placeholder="State Code Name"
+                  onChange={(event) => handleInputChange(event, 'stateCode')}
+                />
+                <FormControl
+                  placeholder="State Crime Rate"
+                  onChange={(event) => handleInputChange(event, 'stateCrimeRate')}
+                />
+              </>
+              
+            )}
+
+
             {(operation === 'get' || operation === 'post' || operation === 'put' || operation === 'delete') && (
               <FormControl
                 placeholder="School Name"
@@ -423,6 +576,7 @@ return (
                   placeholder="Out-State Tuition"
                   onChange={(event) => handleInputChange(event, 'outStateTuition')}
                 />
+                
               </>
             )}
 

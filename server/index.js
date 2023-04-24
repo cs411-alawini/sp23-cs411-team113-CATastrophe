@@ -118,6 +118,20 @@ app.route('/api/schools/low-crime')
     });
   });
 
+  app.route('/api/schools/lowCrimeHighProf')
+  .get((req, res) => {
+    // Call the stored procedure instead of defining it here
+    const SQL_query = 'CALL LowCrimeHighProf()';
+    dbConnection.query(SQL_query, (error, results) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching data from the database.' });
+      } else {
+        res.json(results[0]);
+      }
+    });
+  });
+
 
   // must be different with individual get. 
 app.route('/api/schools')
@@ -207,6 +221,59 @@ app.route('/api/schools')
       }
     });
   });
+
+
+    // update a state, then get all the updated states. 
+    app.route('/api/states/:code')
+    .put((req, res) => {
+      console.log('api update state called');
+      const stateCode = req.params.code;
+      const { CrimeRate } = req.body;
+      
+      console.log("states code: " + stateCode);
+      console.log("CrimeRate: " + CrimeRate);
+
+      const SQL_update_query = `
+        UPDATE State SET CrimeRate = ? 
+        WHERE StateName = ?;
+      `;
+  
+      dbConnection.query(SQL_update_query, [CrimeRate, stateCode], (error, results) => {
+        console.log('Results:', results);
+
+        if (error) {
+          console.error(error);
+          res.status(500).json({ message: 'Error updating data in the database.' });
+        } else {
+          if (results.affectedRows === 0) {
+            res.status(404).json({ message: `No state found with code ${stateCode}.` });
+          } else {
+            res.json({ message: `State with code ${stateCode} updated.` });
+          }
+        }
+      });
+    });
+  
+
+
+
+  // get all states
+  app.route('/api/states')
+  .get((req, res) => {
+    // Call the stored procedure instead of defining it here
+    const SQL_query = 'SELECT * FROM State ORDER BY HappinessScore DESC LIMIT 60' ;
+    dbConnection.query(SQL_query, (error, results) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching data from the database.' });
+      } else {
+        res.json(results);
+      }
+    });
+  });
+
+
+
 
 
 // Start the server
