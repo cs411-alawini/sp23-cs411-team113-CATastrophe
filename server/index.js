@@ -118,6 +118,62 @@ app.route('/api/schools/low-crime')
     });
   });
 
+
+  ////// Stored Procedure defined below //////
+  /* 
+  CREATE DEFINER=`root`@`%` PROCEDURE `LowCrimeHighProf`()
+  BEGIN
+      DECLARE currName VARCHAR(256);
+      DECLARE currRank REAL;
+      DECLARE SchoolCrimeRate REAL;
+      DECLARE ProfRating REAL;
+      DECLARE exit_loop BOOLEAN DEFAULT FALSE;
+      
+      DECLARE c CURSOR FOR (SELECT Name
+          FROM School
+          WHERE TotalEnrollment > 5000);
+
+      DECLARE CONTINUE HANDLER FOR NOT FOUND SET exit_loop = TRUE;
+      
+      DROP TABLE IF EXISTS FinalTable;
+      CREATE TABLE FinalTable (
+          Name VARCHAR(256) Primary Key,
+          Score INT
+      );
+
+      OPEN c;
+      
+      cloop: LOOP
+          FETCH NEXT FROM c INTO currName;
+          
+          IF exit_loop THEN
+              LEAVE cloop;
+          END IF;
+          
+          SET SchoolCrimeRate = (SELECT st.CrimeRate
+          FROM State st JOIN School sc ON (st.Code=sc.State)
+                          WHERE sc.Name = currName AND st.CrimeRate < (SELECT AVG(CrimeRate) FROM State)
+                          ORDER BY st.CrimeRate);
+
+          SET ProfRating = (SELECT AVG(rp.StarRating) as avg_rating
+              FROM School sc JOIN RateProf rp ON (sc.Name = rp.SchoolName)
+              WHERE sc.Name=currName
+          GROUP BY rp.SchoolName
+                          ORDER BY avg_rating DESC);
+
+          SET currRank = SchoolCrimeRate + (5 - ProfRating)*20;
+          
+          INSERT IGNORE INTO FinalTable VALUES(currName, currRank);
+        
+      END LOOP cloop;
+      
+      CLOSE c;
+      
+      SELECT * FROM FinalTable ORDER BY Score DESC LIMIT 100;
+      
+  END
+  */
+
   app.route('/api/schools/lowCrimeHighProf')
   .get((req, res) => {
     // Call the stored procedure instead of defining it here
@@ -223,7 +279,36 @@ app.route('/api/schools')
   });
 
 
-    // update a state, then get all the updated states. 
+    /////// update a state, then get all the updated states. 
+    /////// following is the trigger for update state.
+    /*
+    CREATE TRIGGER happiness BEFORE UPDATE ON State FOR EACH ROW
+    BEGIN
+        SET @crimeRate = (
+            SELECT CrimeRate
+            FROM State
+            WHERE Code = NEW.Code
+        );
+
+        IF NEW.CrimeRate IS NOT NULL AND NEW.CrimeRate < 5 THEN
+            SET NEW.HappinessScore = (@crimeRate - NEW.CrimeRate) + (
+                SELECT HappinessScore
+                FROM State 
+                WHERE Code = OLD.Code
+            );
+        END IF;
+
+        IF NEW.CrimeRate IS NOT NULL AND NEW.CrimeRate >= 5 THEN
+            SET NEW.HappinessScore = (@crimeRate - NEW.CrimeRate) * 1.2 + (
+                SELECT HappinessScore
+                FROM State 
+                WHERE Code = OLD.Code
+            );
+        END IF;
+
+    END;
+    */
+    
     app.route('/api/states/:code')
     .put((req, res) => {
       console.log('api update state called');
@@ -257,7 +342,7 @@ app.route('/api/schools')
 
 
 
-  // get all states
+  // get all STATES
   app.route('/api/states')
   .get((req, res) => {
     // Call the stored procedure instead of defining it here

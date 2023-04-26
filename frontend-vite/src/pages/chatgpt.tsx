@@ -65,7 +65,7 @@ function ChatGPT() {
   return (
     <>
       <div className={styles.chatgptContainer}>
-        <h2 className={styles.chatgptTitle}>ChatGPT</h2>
+        <h2 className={styles.chatgptTitle}>Ask any question about colleges!</h2>
         <div className={styles.chatgptMessages}>
           {messages.map((message, index) => (
             <div key={index} className={styles.chatgptMessage}>
