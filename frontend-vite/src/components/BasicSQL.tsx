@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import { Box } from '@mui/system';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
 
 function BasicSQL() {
 
@@ -131,7 +131,7 @@ function BasicSQL() {
     setOperation(operation);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
     console.log(event.target.value);
     setInputValues({
       ...inputValues,
@@ -140,7 +140,7 @@ function BasicSQL() {
   };
   
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the default form submission behavior
     handleOperationSubmit();
   };

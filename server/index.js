@@ -48,7 +48,7 @@ app.route('/api/chat')
   .post(async (req, res) => {
     try {
       const messages = req.body.messages;
-      const OPENAI_API_KEY = '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'; // Replace with your OpenAI API key
+      const OPENAI_API_KEY = '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'; // Replace with your OpenAI API key
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
