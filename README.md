@@ -1,10 +1,14 @@
 # sp23-cs411-team113-CATastrophe
 
+# Demo video:
+https://youtu.be/z8kTUwS9cNM
+
 # Workflow:
 1. **switch to your branch and fetch+merge to update your branch** \
 `git checkout [your_branch]` \
 `git fetch origin` \
-`git merge origin/main`
+`git merge origin/main` \
+
 
 2. **backend setup and run** \
 `cd server` \
@@ -16,6 +20,8 @@ open another terminal in vscode and run: (2 servers need to run at the same time
 `cd frontend-vite` \
 `npm i` \
 `npx vite dev` 
+
+
 
 
 4. **coding time!**
