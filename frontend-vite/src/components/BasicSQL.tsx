@@ -38,8 +38,6 @@ function BasicSQL() {
 
 
   });
-
-
   
   // effect for the counter that persists in browser. 
   useEffect(() => {
@@ -126,7 +124,6 @@ function BasicSQL() {
       });
   };
   
-
   const handleOperationClick = (operation: string) => {
     setOperation(operation);
   };
@@ -139,7 +136,6 @@ function BasicSQL() {
     });
   };
   
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent the default form submission behavior
     handleOperationSubmit();
